@@ -27,14 +27,24 @@ def generate_speech(text, filename="temp.mp3"):
     with open(filename, "rb") as f:
         audio_bytes = f.read()
     b64 = base64.b64encode(audio_bytes).decode()
-    audio_id = str(uuid.uuid4())  # ユニークIDで再描画
+    audio_id = str(uuid.uuid4())  # ユニークIDで強制再描画
+
     audio_html = f"""
-        <audio id="{audio_id}" autoplay>
+        <audio id="audio-{audio_id}" controls style="display:none">
             <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
         </audio>
+        <script>
+            var audio = document.getElementById("audio-{audio_id}");
+            if (audio) {{
+                audio.play().catch(e => {{
+                    console.log("Audio play failed:", e);
+                }});
+            }}
+        </script>
     """
     st.components.v1.html(audio_html, height=0)
     os.remove(filename)
+
 
 # --- セッション初期化 ---
 def init_session():
