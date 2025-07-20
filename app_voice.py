@@ -30,20 +30,14 @@ def generate_speech(text, filename="temp.mp3"):
     audio_id = str(uuid.uuid4())  # ユニークIDで強制再描画
 
     audio_html = f"""
-        <audio id="audio-{audio_id}" controls style="display:none">
+        <audio id="audio-{audio_id}" controls>
             <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
+            Your browser does not support the audio element.
         </audio>
-        <script>
-            var audio = document.getElementById("audio-{audio_id}");
-            if (audio) {{
-                audio.play().catch(e => {{
-                    console.log("Audio play failed:", e);
-                }});
-            }}
-        </script>
     """
-    st.components.v1.html(audio_html, height=0)
+    st.components.v1.html(audio_html, height=60)  # controls見えるようにする
     os.remove(filename)
+
 
 
 # --- セッション初期化 ---
@@ -116,7 +110,7 @@ if st.session_state["play_audio_text"]:
 # 結果表示
 if st.session_state["show_result"]:
     if st.session_state["correct"]:
-        st.markdown("<h1 style='text-align: center; font-size: 100px;'>◯</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center; font-size: 100px;'>😻</h1>", unsafe_allow_html=True)
         st.button("つぎのもんだい", on_click=next_question)
     else:
         st.markdown("<h1 style='text-align: center; font-size: 100px;'>😿</h1>", unsafe_allow_html=True)
